@@ -74,7 +74,7 @@ export const HomeGrid: React.FC<HomeGridProps> = ({ onSelectTool }) => {
         </h1>
 
         <p className="text-base sm:text-xl font-bold bg-gradient-to-r from-sky-300 via-purple-300 to-pink-300 bg-clip-text text-transparent leading-relaxed max-w-2xl mx-auto">
-          Công cụ xử lý PDF trực tiếp 100% trên trình duyệt — Siêu tốc, Bảo mật & An toàn tuyệt đối
+          Dễ dàng tách trang, gộp nhiều file và tự động xóa trang trắng PDF nhanh chóng, chính xác & giữ nguyên chất lượng gốc.
         </p>
 
         {/* Feature Pills */}
