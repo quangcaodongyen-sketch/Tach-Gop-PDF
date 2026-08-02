@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ToolId } from './types';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { HomeGrid } from './components/HomeGrid';
+import { ApiKeyModal, STORAGE_KEY } from './components/ApiKeyModal';
 import { ToolSplitPdf } from './components/tools/ToolSplitPdf';
 import { ToolMergePdf } from './components/tools/ToolMergePdf';
 import { ToolRemoveBlankPages } from './components/tools/ToolRemoveBlankPages';
@@ -10,6 +11,17 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 
 export default function App() {
   const [activeTool, setActiveTool] = useState<ToolId | null>(null);
+  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
+  const [apiKey, setApiKey] = useState<string>('');
+
+  useEffect(() => {
+    const savedKey = localStorage.getItem(STORAGE_KEY) || '';
+    setApiKey(savedKey);
+  }, []);
+
+  const handleKeySaved = (newKey: string) => {
+    setApiKey(newKey);
+  };
 
   const renderActiveTool = () => {
     switch (activeTool) {
@@ -37,6 +49,8 @@ export default function App() {
       <Header
         activeTool={activeTool}
         onGoHome={() => setActiveTool(null)}
+        onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
+        hasApiKey={!!apiKey}
       />
 
       {/* Main Content Body */}
@@ -48,7 +62,15 @@ export default function App() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Gemini API Key Settings Dialog */}
+      <ApiKeyModal
+        isOpen={isApiKeyModalOpen}
+        onClose={() => setIsApiKeyModalOpen(false)}
+        onKeySaved={handleKeySaved}
+      />
     </div>
   );
 }
+
 

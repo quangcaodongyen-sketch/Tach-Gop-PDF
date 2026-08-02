@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Key, ExternalLink, HelpCircle, Check, Copy, Eye, EyeOff, ShieldCheck, X } from 'lucide-react';
+import { Key, ExternalLink, HelpCircle, Check, Eye, EyeOff, ShieldCheck, X } from 'lucide-react';
 
 interface ApiKeyModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ export const STORAGE_KEY = 'pdfpro_gemini_api_key';
 export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKeySaved }) => {
   const [apiKey, setApiKey] = useState('');
   const [showKey, setShowKey] = useState(false);
-  const [showGuide, setShowGuide] = useState(false);
+  const [showGuide, setShowGuide] = useState(true);
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   useEffect(() => {
@@ -46,22 +46,22 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fadeIn">
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 w-full max-w-lg overflow-hidden transition-all">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-fadeIn">
+      <div className="bg-slate-900 rounded-3xl shadow-2xl border border-slate-800 w-full max-w-xl overflow-hidden transition-all relative">
         {/* Header */}
-        <div className="px-6 py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white flex items-center justify-between">
+        <div className="px-6 py-5 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-white/10 rounded-xl backdrop-blur-md">
+            <div className="p-2.5 bg-white/15 rounded-2xl backdrop-blur-md border border-white/20">
               <Key className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-lg leading-tight">Cấu hình Gemini API Key</h3>
-              <p className="text-xs text-blue-100">Kích hoạt AI hỗ trợ chuyển đổi PDF chính xác cao</p>
+              <h3 className="font-black text-lg leading-tight">Cấu Hình Gemini API Key</h3>
+              <p className="text-xs text-indigo-100 font-medium">Tự quản lý API Key cá nhân nhanh chóng & bảo mật</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-colors"
             title="Đóng"
           >
             <X className="w-5 h-5" />
@@ -71,14 +71,14 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
         {/* Content Body */}
         <div className="p-6 space-y-5">
           {savedSuccess && (
-            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 rounded-xl text-sm flex items-center space-x-2 animate-fadeIn">
-              <Check className="w-5 h-5 flex-shrink-0 text-emerald-600" />
+            <div className="p-3 bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 rounded-2xl text-xs font-bold flex items-center space-x-2 animate-fadeIn">
+              <Check className="w-5 h-5 flex-shrink-0 text-emerald-400" />
               <span>Đã lưu API Key thành công trên trình duyệt (Local Storage)!</span>
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
               Nhập Gemini API Key của bạn:
             </label>
             <div className="relative">
@@ -87,59 +87,61 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder="AIzaSy..."
-                className="w-full px-4 py-3 pr-11 bg-slate-50 dark:bg-slate-800/60 border border-slate-300 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 dark:text-slate-100 text-sm transition-all"
+                className="w-full px-4 py-3 pr-11 bg-slate-950 border border-slate-700 rounded-xl focus:ring-2 focus:ring-indigo-500 text-white text-sm transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
               >
                 {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
-            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400 flex items-center space-x-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 inline" />
-              <span>API Key chỉ được lưu an toàn trên trình duyệt của bạn (Local Storage). Không tải lên máy chủ.</span>
+            <p className="mt-2 text-[11px] text-slate-400 flex items-center space-x-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-400 inline-block flex-shrink-0" />
+              <span>API Key chỉ lưu an toàn trong trình duyệt (Local Storage). Không gửi tới máy chủ khác.</span>
             </p>
           </div>
 
           {/* Action Links */}
-          <div className="flex flex-wrap items-center justify-between gap-2 pt-1 border-t border-slate-100 dark:border-slate-800">
+          <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
             <a
               href="https://aistudio.google.com/app/apikey"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center space-x-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline"
+              className="inline-flex items-center space-x-2 text-xs font-bold text-pink-400 hover:text-pink-300 bg-pink-500/10 hover:bg-pink-500/20 px-3.5 py-2 rounded-xl border border-pink-500/30 transition-all shadow-sm"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Lấy API Key miễn phí</span>
+              <ExternalLink className="w-4 h-4" />
+              <span>Link Lấy API Key Miễn Phí (Google AI Studio)</span>
             </a>
 
             <button
               type="button"
               onClick={() => setShowGuide(!showGuide)}
-              className="inline-flex items-center space-x-1.5 text-xs font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 hover:underline"
+              className="inline-flex items-center space-x-1.5 text-xs font-semibold text-indigo-400 hover:text-indigo-300 underline"
             >
-              <HelpCircle className="w-3.5 h-3.5" />
+              <HelpCircle className="w-4 h-4" />
               <span>{showGuide ? 'Ẩn hướng dẫn' : 'Hướng dẫn lấy API Key'}</span>
             </button>
           </div>
 
-          {/* Guide box */}
+          {/* Detailed Guide Box */}
           {showGuide && (
-            <div className="p-4 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 space-y-2 animate-fadeIn">
-              <h4 className="font-bold text-slate-900 dark:text-white mb-2 flex items-center space-x-1.5">
-                <span>Các bước lấy API Key từ Google AI Studio:</span>
+            <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 text-xs text-slate-300 space-y-2 animate-fadeIn">
+              <h4 className="font-bold text-white mb-2 flex items-center space-x-2">
+                <span className="w-2 h-2 rounded-full bg-indigo-400"></span>
+                <span>Hướng dẫn 4 bước lấy API Key từ Google AI Studio:</span>
               </h4>
-              <ol className="list-decimal list-inside space-y-1.5 leading-relaxed">
-                <li>Đăng nhập tài khoản Google của bạn.</li>
+              <ol className="list-decimal list-inside space-y-2 leading-relaxed text-slate-300 pl-1">
                 <li>
-                  Nhấp vào nút <strong className="text-blue-600 dark:text-blue-400">Create API Key</strong> trong trang Google AI Studio.
+                  Nhấp vào nút <strong className="text-pink-400">Link Lấy API Key Miễn Phí</strong> ở trên (hoặc truy cập <code className="text-cyan-300">aistudio.google.com/app/apikey</code>).
                 </li>
-                <li>Sao chép mã API Key được tạo ra.</li>
-                <li>Dán mã API Key vào ô nhập liệu ở trên.</li>
+                <li>Đăng nhập bằng tài khoản Google (Gmail) của bạn.</li>
                 <li>
-                  Nhấn <strong className="text-emerald-600 dark:text-emerald-400">Lưu API Key</strong> để lưu trên trình duyệt (Local Storage).
+                  Nhấn nút <strong className="text-indigo-400">Create API Key</strong> (Tạo API Key mới).
+                </li>
+                <li>
+                  Sao chép chuỗi mã bắt đầu bằng <code className="text-amber-300">AIzaSy...</code> dán vào ô nhập ở trên và bấm <strong className="text-emerald-400">Lưu API Key</strong>.
                 </li>
               </ol>
             </div>
@@ -147,14 +149,14 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
         </div>
 
         {/* Footer Actions */}
-        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-800/40 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div className="px-6 py-4 bg-slate-950 border-t border-slate-800 flex items-center justify-between">
           {apiKey ? (
             <button
               type="button"
               onClick={handleClearKey}
-              className="px-3 py-2 text-xs font-semibold text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30 rounded-lg transition-colors"
+              className="px-3.5 py-2 text-xs font-bold text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-xl transition-colors border border-rose-500/20"
             >
-              Đổi API Key (Xóa)
+              Xóa API Key
             </button>
           ) : (
             <div />
@@ -164,14 +166,14 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-xl transition-colors"
+              className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors"
             >
               Đóng
             </button>
             <button
               type="button"
               onClick={handleSave}
-              className="px-5 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 active:scale-98 rounded-xl shadow-md shadow-blue-500/20 transition-all flex items-center space-x-1.5"
+              className="px-5 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 rounded-xl shadow-lg shadow-purple-500/25 transition-all flex items-center space-x-1.5"
             >
               <Check className="w-4 h-4" />
               <span>Lưu API Key</span>

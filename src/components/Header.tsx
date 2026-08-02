@@ -1,18 +1,33 @@
 import React from 'react';
-import { FileText, Home, ShieldCheck, Zap } from 'lucide-react';
+import { FileText, Home, Key, UserCheck, CheckCircle2, Sparkles } from 'lucide-react';
 import { ToolId } from '../types';
 
 interface HeaderProps {
   activeTool: ToolId | null;
   onGoHome: () => void;
+  onOpenApiKeyModal: () => void;
+  hasApiKey: boolean;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   activeTool,
   onGoHome,
+  onOpenApiKeyModal,
+  hasApiKey,
 }) => {
   return (
-    <header className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 shadow-lg shadow-black/20">
+    <header className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800 shadow-xl shadow-black/30">
+      {/* Top Banner Notice - Author & Copyright Info */}
+      <div className="bg-gradient-to-r from-indigo-900/60 via-purple-900/60 to-pink-900/60 border-b border-slate-800/80 py-1.5 px-4 text-center">
+        <div className="max-w-7xl mx-auto flex items-center justify-center space-x-2 text-[11px] sm:text-xs font-black tracking-wide">
+          <UserCheck className="w-3.5 h-3.5 text-amber-400" />
+          <span className="text-slate-300">Tác giả & Bản quyền:</span>
+          <span className="bg-gradient-to-r from-amber-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent">
+            Đinh Văn Thành – 0915.213717
+          </span>
+        </div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Logo & Navigation */}
         <div className="flex items-center space-x-4">
@@ -51,16 +66,35 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </div>
 
-        {/* Right Status Badge */}
+        {/* Right Controls: API Key Settings Button */}
         <div className="flex items-center space-x-3">
-          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold shadow-xs">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span className="hidden sm:inline">100% Offline & Bảo Mật</span>
-            <span className="sm:hidden">Offline</span>
-          </div>
+          <button
+            onClick={onOpenApiKeyModal}
+            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border shadow-sm ${
+              hasApiKey
+                ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20'
+                : 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
+            }`}
+            title="Nhập hoặc đổi API Key cá nhân"
+          >
+            {hasApiKey ? (
+              <>
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span className="hidden sm:inline">API Key: Đã Kích Hoạt</span>
+                <span className="sm:hidden">API Key</span>
+              </>
+            ) : (
+              <>
+                <Key className="w-4 h-4 text-indigo-400" />
+                <span>Cấu Hình API Key</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+              </>
+            )}
+          </button>
         </div>
       </div>
     </header>
   );
 };
+
 
