@@ -1,0 +1,6 @@
+{
+  "name": "PDF Pro",
+  "description": "Ứng dụng xử lý file PDF chuyên nghiệp: Tách, gộp, xóa trang trắng, chuyển đổi PDF sang Word, Excel và ngược lại.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
