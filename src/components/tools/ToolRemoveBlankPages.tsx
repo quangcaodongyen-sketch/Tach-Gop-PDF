@@ -127,15 +127,19 @@ export const ToolRemoveBlankPages: React.FC<ToolRemoveBlankPagesProps> = ({ onBa
       </button>
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-2xl p-6 shadow-xl flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md">
-            <Eraser className="w-8 h-8 text-white" />
+      <div className="bg-gradient-to-r from-cyan-400 via-teal-500 to-emerald-500 text-white rounded-3xl p-8 shadow-xl flex items-center justify-between relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+        <div className="absolute bottom-0 left-0 w-40 h-40 bg-black/10 rounded-full blur-2xl translate-y-1/3 -translate-x-1/4"></div>
+
+        <div className="flex items-center space-x-5 relative z-10">
+          <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-md shadow-inner border border-white/30">
+            <Eraser className="w-10 h-10 text-white drop-shadow-md" />
           </div>
           <div>
-            <h2 className="text-2xl font-black">Xóa Trang Trắng PDF</h2>
-            <p className="text-xs text-amber-100">
-              Quét thông minh nội dung PDF, tự động nhận diện và xóa các trang trắng hoặc trống.
+            <h2 className="text-3xl font-black tracking-tight drop-shadow-md">Xóa Trang Trắng PDF</h2>
+            <p className="text-sm text-teal-50 font-medium mt-1 drop-shadow-sm">
+              Quét thông minh, tự động nhận diện và xóa các trang trắng hoặc trống hoàn toàn.
             </p>
           </div>
         </div>
@@ -147,14 +151,14 @@ export const ToolRemoveBlankPages: React.FC<ToolRemoveBlankPagesProps> = ({ onBa
           onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
           onDragLeave={() => setIsDragOver(false)}
           onDrop={handleDrop}
-          className={`bg-white dark:bg-slate-800 rounded-2xl p-10 border-2 border-dashed transition-all text-center space-y-4 ${
-            isDragOver ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/20' : 'border-amber-300 dark:border-slate-700 hover:border-amber-500'
+          className={`glass-card rounded-3xl p-10 border-2 border-dashed transition-all duration-300 text-center space-y-5 ${
+            isDragOver ? 'border-teal-400 bg-teal-50/50 dark:bg-teal-900/20 scale-[1.02]' : 'border-teal-300/50 dark:border-teal-700/50 hover:border-teal-400 hover:shadow-lg'
           }`}>
-          <div className="w-16 h-16 bg-amber-50 dark:bg-amber-950/50 rounded-full flex items-center justify-center mx-auto text-amber-600 dark:text-amber-400">
-            <Upload className="w-8 h-8" />
+          <div className="w-20 h-20 bg-gradient-to-br from-cyan-100 to-teal-100 dark:from-cyan-900/50 dark:to-teal-900/50 rounded-full flex items-center justify-center mx-auto text-teal-500 dark:text-teal-400 shadow-inner">
+            <Upload className="w-10 h-10" />
           </div>
           <div>
-            <h3 className="font-bold text-base text-slate-900 dark:text-white">
+            <h3 className="font-black text-xl text-slate-800 dark:text-white tracking-tight">
               Chọn tệp PDF cần quét trang trắng
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -163,8 +167,8 @@ export const ToolRemoveBlankPages: React.FC<ToolRemoveBlankPagesProps> = ({ onBa
           </div>
           <label className="inline-block">
             <input type="file" accept=".pdf" onChange={handleFileChange} className="hidden" />
-            <span className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold cursor-pointer shadow-md shadow-amber-500/20 transition-all inline-flex items-center space-x-2">
-              <FileText className="w-4 h-4" />
+            <span className="px-6 py-3 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white rounded-xl text-sm font-bold cursor-pointer shadow-lg shadow-teal-500/30 hover:shadow-teal-500/50 hover:-translate-y-0.5 transition-all inline-flex items-center space-x-2">
+              <FileText className="w-5 h-5" />
               <span>Tải File PDF Lên</span>
             </span>
           </label>
@@ -173,17 +177,20 @@ export const ToolRemoveBlankPages: React.FC<ToolRemoveBlankPagesProps> = ({ onBa
 
       {/* Scanning Progress */}
       {isScanning && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 shadow-md text-center space-y-4 relative">
-          <button onClick={handleCancelScan} className="absolute top-4 right-4 text-slate-400 hover:text-rose-500">
-            <Square className="w-5 h-5" />
+        <div className="glass-card rounded-3xl p-8 shadow-md text-center space-y-5 relative overflow-hidden">
+          {/* Subtle gradient background for card */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent dark:from-slate-800/40 pointer-events-none"></div>
+          
+          <button onClick={handleCancelScan} className="absolute top-4 right-4 text-slate-400 hover:text-rose-500 relative z-10 transition-colors">
+            <Square className="w-6 h-6" />
           </button>
-          <RefreshCw className="w-8 h-8 text-amber-500 animate-spin mx-auto" />
-          <h3 className="font-bold text-base text-slate-900 dark:text-white">
+          <RefreshCw className="w-10 h-10 text-teal-500 animate-spin mx-auto relative z-10" />
+          <h3 className="font-black text-lg text-slate-900 dark:text-white relative z-10">
             Đang quét phân tích toàn bộ trang ({scanProgress}%)...
           </h3>
-          <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 overflow-hidden max-w-md mx-auto">
+          <div className="w-full bg-slate-100/50 dark:bg-slate-700/50 rounded-full h-4 overflow-hidden max-w-md mx-auto relative z-10 shadow-inner">
             <div
-              className="bg-amber-500 h-full transition-all duration-300"
+              className="bg-gradient-to-r from-cyan-400 to-teal-500 h-full transition-all duration-300 rounded-full"
               style={{ width: `${scanProgress}%` }}
             />
           </div>
@@ -194,7 +201,7 @@ export const ToolRemoveBlankPages: React.FC<ToolRemoveBlankPagesProps> = ({ onBa
       {file && !isScanning && pageInfos.length > 0 && (
         <div className="space-y-6">
           {/* Action Bar */}
-          <div className="bg-white dark:bg-slate-800 rounded-2xl p-4 border border-slate-200 dark:border-slate-700 shadow-md flex flex-wrap items-center justify-between gap-4">
+          <div className="glass-card rounded-3xl p-6 shadow-md flex flex-wrap items-center justify-between gap-4 relative z-10">
             <div className="space-y-0.5">
               <h3 className="font-bold text-sm text-slate-900 dark:text-white">
                 Kết quả quét: {pageInfos.length} trang
@@ -207,15 +214,15 @@ export const ToolRemoveBlankPages: React.FC<ToolRemoveBlankPagesProps> = ({ onBa
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={handleSelectAllBlank}
-                className="px-3.5 py-1.5 bg-amber-50 dark:bg-amber-950/50 hover:bg-amber-100 text-amber-700 dark:text-amber-300 border border-amber-300 dark:border-amber-800 rounded-xl text-xs font-bold transition-all flex items-center space-x-1"
+                className="px-4 py-2 bg-gradient-to-r from-cyan-50 to-teal-50 dark:from-cyan-900/30 dark:to-teal-900/30 hover:from-cyan-100 hover:to-teal-100 text-teal-700 dark:text-teal-300 border border-teal-200 dark:border-teal-800/50 rounded-xl text-sm font-bold transition-all flex items-center space-x-1.5 shadow-sm"
               >
-                <CheckSquare className="w-3.5 h-3.5" />
+                <CheckSquare className="w-4 h-4" />
                 <span>Chọn tất cả trang trắng</span>
               </button>
 
               <button
                 onClick={handleClearAllSelections}
-                className="px-3.5 py-1.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition-all"
+                className="px-4 py-2 bg-slate-100/80 dark:bg-slate-700/80 hover:bg-slate-200 text-slate-700 dark:text-slate-200 rounded-xl text-sm font-bold transition-all shadow-sm backdrop-blur-sm"
               >
                 Bỏ chọn tất cả
               </button>
@@ -223,9 +230,9 @@ export const ToolRemoveBlankPages: React.FC<ToolRemoveBlankPagesProps> = ({ onBa
               <button
                 onClick={handleExportCleanPdf}
                 disabled={selectedCount === 0}
-                className="px-5 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-md shadow-amber-500/20 disabled:opacity-50 transition-all flex items-center space-x-1.5"
+                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-teal-500/30 disabled:opacity-50 transition-all flex items-center space-x-2"
               >
-                <Download className="w-4 h-4" />
+                <Download className="w-5 h-5" />
                 <span>Xuất PDF Đã Xóa ({selectedCount})</span>
               </button>
 
@@ -244,12 +251,12 @@ export const ToolRemoveBlankPages: React.FC<ToolRemoveBlankPagesProps> = ({ onBa
               <div
                 key={p.pageNumber}
                 onClick={() => handleToggleSelectPage(p.pageNumber)}
-                className={`group relative bg-white dark:bg-slate-800 rounded-xl border-2 p-2.5 cursor-pointer transition-all duration-200 shadow-xs hover:shadow-md ${
+                className={`group relative bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm rounded-2xl border-2 p-3 cursor-pointer transition-all duration-300 shadow-sm hover:shadow-xl hover:-translate-y-1 ${
                   p.selectedForDeletion
-                    ? 'border-rose-500 bg-rose-50/40 dark:bg-rose-950/20 ring-2 ring-rose-500/30'
+                    ? 'border-rose-500 bg-rose-50/60 dark:bg-rose-900/30 ring-4 ring-rose-500/20'
                     : p.isBlank
-                    ? 'border-amber-400 dark:border-amber-600 bg-amber-50/20'
-                    : 'border-slate-200 dark:border-slate-700 hover:border-slate-400'
+                    ? 'border-teal-400 dark:border-teal-600 bg-teal-50/30 dark:bg-teal-900/10'
+                    : 'border-slate-200/50 dark:border-slate-700/50 hover:border-slate-400'
                 }`}
               >
                 {/* Page Number & Checkbox Header */}

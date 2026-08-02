@@ -7,11 +7,6 @@ import { ApiKeyModal, STORAGE_KEY } from './components/ApiKeyModal';
 import { ToolSplitPdf } from './components/tools/ToolSplitPdf';
 import { ToolMergePdf } from './components/tools/ToolMergePdf';
 import { ToolRemoveBlankPages } from './components/tools/ToolRemoveBlankPages';
-import { ToolPdfToWord } from './components/tools/ToolPdfToWord';
-import { ToolPdfToExcel } from './components/tools/ToolPdfToExcel';
-import { ToolWordToPdf } from './components/tools/ToolWordToPdf';
-import { ToolExcelToPdf } from './components/tools/ToolExcelToPdf';
-import { ToolEditPdf } from './components/tools/ToolEditPdf';
 import { ErrorBoundary } from './components/ErrorBoundary';
 export default function App() {
   const [activeTool, setActiveTool] = useState<ToolId | null>(null);
@@ -35,23 +30,19 @@ export default function App() {
         return <ToolMergePdf onBack={() => setActiveTool(null)} />;
       case 'remove-blank':
         return <ToolRemoveBlankPages onBack={() => setActiveTool(null)} />;
-      case 'pdf-to-word':
-        return <ToolPdfToWord onBack={() => setActiveTool(null)} hasApiKey={!!apiKey} />;
-      case 'pdf-to-excel':
-        return <ToolPdfToExcel onBack={() => setActiveTool(null)} />;
-      case 'word-to-pdf':
-        return <ToolWordToPdf onBack={() => setActiveTool(null)} />;
-      case 'excel-to-pdf':
-        return <ToolExcelToPdf onBack={() => setActiveTool(null)} />;
-      case 'edit-pdf':
-        return <ToolEditPdf onBack={() => setActiveTool(null)} />;
       default:
         return <HomeGrid onSelectTool={(id) => setActiveTool(id)} />;
     }
   };
 
-  return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-blue-500 selection:text-white transition-colors duration-200">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-rose-500 selection:text-white transition-colors duration-200 animated-gradient-bg relative overflow-hidden">
+      {/* Decorative gradient orbs */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
+        <div className="absolute -top-40 -left-40 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div className="absolute top-0 -right-20 w-96 h-96 bg-rose-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-40 left-20 w-96 h-96 bg-orange-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
+        <div className="absolute -bottom-40 -right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-6000"></div>
+      </div>
       {/* Header */}
       <Header
         activeTool={activeTool}

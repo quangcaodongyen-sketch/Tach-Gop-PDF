@@ -1,12 +1,7 @@
 export type ToolId = 
   | 'split' 
   | 'merge' 
-  | 'remove-blank' 
-  | 'pdf-to-word' 
-  | 'pdf-to-excel' 
-  | 'word-to-pdf' 
-  | 'excel-to-pdf'
-  | 'edit-pdf';
+  | 'remove-blank';
 
 export interface ToolMeta {
   id: ToolId;

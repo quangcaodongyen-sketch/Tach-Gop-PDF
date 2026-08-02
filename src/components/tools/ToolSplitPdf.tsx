@@ -192,15 +192,19 @@ export const ToolSplitPdf: React.FC<ToolSplitPdfProps> = ({ onBack }) => {
       </button>
 
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl p-6 shadow-xl flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md">
-            <Scissors className="w-8 h-8 text-white" />
+      <div className="bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500 text-white rounded-3xl p-8 shadow-xl flex items-center justify-between relative overflow-hidden">
+        {/* Decorative background elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+        <div className="absolute bottom-0 left-0 w-40 h-40 bg-black/10 rounded-full blur-2xl translate-y-1/3 -translate-x-1/4"></div>
+        
+        <div className="flex items-center space-x-5 relative z-10">
+          <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-md shadow-inner border border-white/30">
+            <Scissors className="w-10 h-10 text-white drop-shadow-md" />
           </div>
           <div>
-            <h2 className="text-2xl font-black">Tách Trang PDF</h2>
-            <p className="text-xs text-blue-100">
-              Nhập trang lẻ (1,3,5) hoặc khoảng trang (1-10) để trích xuất file PDF mới.
+            <h2 className="text-3xl font-black tracking-tight drop-shadow-md">Tách Trang PDF</h2>
+            <p className="text-sm text-rose-50 font-medium mt-1 drop-shadow-sm">
+              Trích xuất trang lẻ hoặc một khoảng trang. Nhanh chóng, bảo mật.
             </p>
           </div>
         </div>
@@ -211,14 +215,14 @@ export const ToolSplitPdf: React.FC<ToolSplitPdfProps> = ({ onBack }) => {
         onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
         onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
-        className={`bg-white dark:bg-slate-800 rounded-2xl p-8 border-2 border-dashed transition-all text-center space-y-4 ${
-          isDragOver ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20' : 'border-blue-300 dark:border-slate-700 hover:border-blue-500'
+        className={`glass-card rounded-3xl p-10 border-2 border-dashed transition-all duration-300 text-center space-y-5 ${
+          isDragOver ? 'border-rose-400 bg-rose-50/50 dark:bg-rose-900/20 scale-[1.02]' : 'border-rose-300/50 dark:border-rose-700/50 hover:border-rose-400 hover:shadow-lg'
         }`}>
-        <div className="w-16 h-16 bg-blue-50 dark:bg-blue-950/50 rounded-full flex items-center justify-center mx-auto text-blue-600 dark:text-blue-400">
-          <Upload className="w-8 h-8" />
+        <div className="w-20 h-20 bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900/50 dark:to-rose-900/50 rounded-full flex items-center justify-center mx-auto text-rose-500 dark:text-rose-400 shadow-inner">
+          <Upload className="w-10 h-10" />
         </div>
         <div>
-          <h3 className="font-bold text-base text-slate-900 dark:text-white">
+          <h3 className="font-black text-xl text-slate-800 dark:text-white tracking-tight">
             Kéo thả tệp PDF vào đây hoặc chọn từ máy tính
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -233,8 +237,8 @@ export const ToolSplitPdf: React.FC<ToolSplitPdfProps> = ({ onBack }) => {
             onChange={handleFileUpload}
             className="hidden"
           />
-          <span className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold cursor-pointer shadow-md shadow-blue-500/20 transition-all inline-flex items-center space-x-2">
-            <FileText className="w-4 h-4" />
+          <span className="px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-xl text-sm font-bold cursor-pointer shadow-lg shadow-rose-500/30 hover:shadow-rose-500/50 hover:-translate-y-0.5 transition-all inline-flex items-center space-x-2">
+            <FileText className="w-5 h-5" />
             <span>Chọn File PDF</span>
           </span>
         </label>
@@ -257,7 +261,7 @@ export const ToolSplitPdf: React.FC<ToolSplitPdfProps> = ({ onBack }) => {
             />
             <button
               onClick={handleApplyGlobalRange}
-              className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition-all"
+              className="px-4 py-2 bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white text-xs font-bold rounded-xl shadow-md transition-all"
             >
               Áp Dụng Tất Cả
             </button>
@@ -267,25 +271,30 @@ export const ToolSplitPdf: React.FC<ToolSplitPdfProps> = ({ onBack }) => {
 
       {/* File List */}
       {items.length > 0 && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-md space-y-4">
-          <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center justify-between">
-            <span>Danh sách tệp tin ({items.length})</span>
+        <div className="glass-card rounded-3xl p-8 shadow-xl space-y-6 relative overflow-hidden">
+          {/* Subtle gradient background for card */}
+          <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent dark:from-slate-800/40 pointer-events-none"></div>
+          
+          <div className="flex items-center justify-between pb-4 border-b border-slate-200/50 dark:border-slate-700/50 relative z-10">
+            <h3 className="font-bold text-sm text-slate-900 dark:text-white flex items-center justify-between">
+              <span>Danh sách tệp tin ({items.length})</span>
+            </h3>
             <button
               onClick={() => setItems([])}
               className="text-xs text-rose-500 hover:underline font-semibold"
             >
               Xóa tất cả
             </button>
-          </h3>
+          </div>
 
-          <div className="divide-y divide-slate-100 dark:divide-slate-700/60 max-h-96 overflow-y-auto pr-1">
+          <div className="divide-y divide-slate-100 dark:divide-slate-700/60 max-h-96 overflow-y-auto pr-1 relative z-10">
             {items.map((item, idx) => (
               <div
                 key={item.id}
                 className="py-3 flex flex-wrap items-center justify-between gap-3 text-xs"
               >
                 <div className="flex items-center space-x-3 min-w-[200px] flex-1">
-                  <div className="p-2 bg-blue-50 dark:bg-blue-950/50 text-blue-600 rounded-xl">
+                  <div className="p-2.5 bg-gradient-to-br from-pink-100 to-rose-100 dark:from-pink-900/30 dark:to-rose-900/30 text-rose-600 dark:text-rose-400 rounded-xl shadow-sm">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div>
@@ -336,14 +345,14 @@ export const ToolSplitPdf: React.FC<ToolSplitPdfProps> = ({ onBack }) => {
           </div>
 
           {/* Start Process Action */}
-          <div className="pt-4 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+          <div className="pt-6 border-t border-slate-200/50 dark:border-slate-700/50 flex justify-end relative z-10">
             <button
               onClick={handleStartSplit}
               disabled={progress.isProcessing}
-              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/25 active:scale-98 disabled:opacity-50 transition-all flex items-center space-x-2"
+              className="px-8 py-3.5 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-black text-sm rounded-xl shadow-lg shadow-rose-500/30 active:scale-95 disabled:opacity-50 transition-all flex items-center space-x-2"
             >
-              <Scissors className="w-4 h-4" />
-              <span>Tách PDF Ngay</span>
+              <Scissors className="w-5 h-5" />
+              <span>Bắt Đầu Tách Trang</span>
             </button>
           </div>
         </div>
