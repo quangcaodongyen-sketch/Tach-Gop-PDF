@@ -1,26 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ToolId } from './types';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { HomeGrid } from './components/HomeGrid';
-import { ApiKeyModal, STORAGE_KEY } from './components/ApiKeyModal';
 import { ToolSplitPdf } from './components/tools/ToolSplitPdf';
 import { ToolMergePdf } from './components/tools/ToolMergePdf';
 import { ToolRemoveBlankPages } from './components/tools/ToolRemoveBlankPages';
 import { ErrorBoundary } from './components/ErrorBoundary';
+
 export default function App() {
   const [activeTool, setActiveTool] = useState<ToolId | null>(null);
-  const [isApiKeyModalOpen, setIsApiKeyModalOpen] = useState(false);
-  const [apiKey, setApiKey] = useState<string>('');
-
-  useEffect(() => {
-    const savedKey = localStorage.getItem(STORAGE_KEY) || '';
-    setApiKey(savedKey);
-  }, []);
-
-  const handleKeySaved = (newKey: string) => {
-    setApiKey(newKey);
-  };
 
   const renderActiveTool = () => {
     switch (activeTool) {
@@ -35,38 +24,31 @@ export default function App() {
     }
   };
 
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-rose-500 selection:text-white transition-colors duration-200 animated-gradient-bg relative overflow-hidden">
-      {/* Decorative gradient orbs */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
-        <div className="absolute -top-40 -left-40 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
-        <div className="absolute top-0 -right-20 w-96 h-96 bg-rose-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-40 left-20 w-96 h-96 bg-orange-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
-        <div className="absolute -bottom-40 -right-20 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-6000"></div>
+  return (
+    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white transition-colors duration-200 bg-grid-pattern relative overflow-x-hidden">
+      {/* Dynamic Glow Orbs Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute -top-40 -left-40 w-[600px] h-[600px] bg-gradient-to-br from-indigo-600/30 to-purple-600/30 rounded-full blur-[140px] animate-pulseGlow"></div>
+        <div className="absolute top-1/3 -right-40 w-[500px] h-[500px] bg-gradient-to-br from-pink-600/25 to-rose-600/25 rounded-full blur-[140px] animate-pulseGlow" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute -bottom-40 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-teal-600/20 to-emerald-600/20 rounded-full blur-[150px] animate-pulseGlow" style={{ animationDelay: '4s' }}></div>
       </div>
+
       {/* Header */}
       <Header
         activeTool={activeTool}
         onGoHome={() => setActiveTool(null)}
-        onOpenApiKeyModal={() => setIsApiKeyModalOpen(true)}
-        hasApiKey={!!apiKey}
       />
 
       {/* Main Content Body */}
-      <main className="flex-1 pb-16">
+      <main className="flex-1 pb-16 relative z-10">
         <ErrorBoundary>
           {renderActiveTool()}
         </ErrorBoundary>
       </main>
 
-      {/* Fixed Copyright Footer */}
+      {/* Footer */}
       <Footer />
-
-      {/* Gemini API Key Settings Dialog */}
-      <ApiKeyModal
-        isOpen={isApiKeyModalOpen}
-        onClose={() => setIsApiKeyModalOpen(false)}
-        onKeySaved={handleKeySaved}
-      />
     </div>
   );
 }
+

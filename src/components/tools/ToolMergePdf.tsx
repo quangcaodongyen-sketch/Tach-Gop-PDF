@@ -152,26 +152,24 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
       {/* Navigation */}
       <button
         onClick={onBack}
-        className="inline-flex items-center space-x-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 bg-white dark:bg-slate-800 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 shadow-xs transition-all"
+        className="inline-flex items-center space-x-2 text-xs font-bold text-slate-300 hover:text-white bg-slate-900/80 hover:bg-slate-800 px-4 py-2.5 rounded-xl border border-slate-800 shadow-md transition-all"
       >
-        <ArrowLeft className="w-4 h-4" />
+        <ArrowLeft className="w-4 h-4 text-indigo-400" />
         <span>Quay về trang chủ</span>
       </button>
 
-      {/* Header */}
-      <div className="bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white rounded-3xl p-8 shadow-xl flex items-center justify-between relative overflow-hidden">
-        {/* Decorative background elements */}
+      {/* Header Banner */}
+      <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white rounded-3xl p-8 shadow-2xl flex items-center justify-between relative overflow-hidden border border-white/10">
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
-        <div className="absolute bottom-0 left-0 w-40 h-40 bg-black/10 rounded-full blur-2xl translate-y-1/3 -translate-x-1/4"></div>
 
         <div className="flex items-center space-x-5 relative z-10">
-          <div className="p-4 bg-white/20 rounded-2xl backdrop-blur-md shadow-inner border border-white/30">
+          <div className="p-4 bg-white/15 rounded-2xl backdrop-blur-md shadow-inner border border-white/20">
             <Layers className="w-10 h-10 text-white drop-shadow-md" />
           </div>
           <div>
             <h2 className="text-3xl font-black tracking-tight drop-shadow-md">Gộp Nhiều File PDF</h2>
-            <p className="text-sm text-fuchsia-50 font-medium mt-1 drop-shadow-sm">
-              Kéo thả sắp xếp thứ tự và hợp nhất các tài liệu với tốc độ siêu nhanh.
+            <p className="text-sm text-indigo-100 font-medium mt-1">
+              Kéo thả sắp xếp thứ tự và hợp nhất nhiều file PDF thành một tài liệu duy nhất.
             </p>
           </div>
         </div>
@@ -183,16 +181,16 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
         onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
         className={`glass-card rounded-3xl p-10 border-2 border-dashed transition-all duration-300 text-center space-y-5 ${
-          isDragOver ? 'border-purple-400 bg-purple-50/50 dark:bg-purple-900/20 scale-[1.02]' : 'border-purple-300/50 dark:border-purple-700/50 hover:border-purple-400 hover:shadow-lg'
+          isDragOver ? 'border-purple-400 bg-purple-950/20 scale-[1.01]' : 'border-slate-800 hover:border-purple-500/50 hover:shadow-2xl'
         }`}>
-        <div className="w-20 h-20 bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/50 dark:to-purple-900/50 rounded-full flex items-center justify-center mx-auto text-purple-500 dark:text-purple-400 shadow-inner">
-          <Upload className="w-10 h-10" />
+        <div className="w-20 h-20 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center mx-auto text-purple-400 border border-purple-500/30 shadow-inner">
+          <Upload className="w-9 h-9" />
         </div>
         <div>
-          <h3 className="font-black text-xl text-slate-800 dark:text-white tracking-tight">
+          <h3 className="font-black text-xl text-white tracking-tight">
             Kéo thả nhiều file PDF vào đây để gộp
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs text-slate-400 mt-1">
             Có thể chọn và sắp xếp danh sách linh hoạt
           </p>
         </div>
@@ -204,7 +202,7 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
             onChange={handleFileUpload}
             className="hidden"
           />
-          <span className="px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white rounded-xl text-sm font-bold cursor-pointer shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-0.5 transition-all inline-flex items-center space-x-2">
+          <span className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl text-sm font-bold cursor-pointer shadow-lg shadow-purple-500/25 hover:-translate-y-0.5 transition-all inline-flex items-center space-x-2">
             <FileText className="w-5 h-5" />
             <span>Thêm File PDF</span>
           </span>
@@ -213,20 +211,17 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
 
       {/* Items List */}
       {items.length > 0 && (
-        <div className="glass-card rounded-3xl p-8 shadow-xl space-y-6 relative overflow-hidden">
-          {/* Subtle gradient background for card */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent dark:from-slate-800/40 pointer-events-none"></div>
-          
-          <div className="flex items-center justify-between pb-4 border-b border-slate-200/50 dark:border-slate-700/50 relative z-10">
-            <h3 className="font-bold text-sm text-slate-900 dark:text-white">
-              Thứ tự gộp ({items.length} tệp - Tổng {totalPagesSum} trang)
+        <div className="glass-card rounded-3xl p-8 shadow-2xl space-y-6 relative overflow-hidden border border-slate-800">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-800 relative z-10">
+            <h3 className="font-bold text-sm text-white">
+              Thứ tự gộp ({items.length} tệp • Tổng {totalPagesSum} trang)
             </h3>
             <button
               onClick={() => {
                 setItems([]);
                 setResultBlob(null);
               }}
-              className="text-xs text-rose-500 hover:underline font-semibold"
+              className="text-xs text-rose-400 hover:underline font-semibold"
             >
               Xóa danh sách
             </button>
@@ -236,20 +231,20 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
             {items.map((item, idx) => (
               <div
                 key={item.id}
-                className="p-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-sm rounded-2xl border border-slate-200/50 dark:border-slate-700/50 flex items-center justify-between gap-4 text-sm shadow-sm hover:shadow-md transition-shadow"
+                className="p-4 bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 flex items-center justify-between gap-4 text-sm shadow-sm hover:border-purple-500/40 transition-all"
               >
                 <div className="flex items-center space-x-4 flex-1 min-w-0">
-                  <span className="w-8 h-8 rounded-xl bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 font-black flex items-center justify-center flex-shrink-0 shadow-inner">
+                  <span className="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 font-black flex items-center justify-center flex-shrink-0 border border-purple-500/30">
                     {idx + 1}
                   </span>
-                  <div className="p-2.5 bg-gradient-to-br from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 text-purple-600 dark:text-purple-400 rounded-xl flex-shrink-0 shadow-sm">
+                  <div className="p-2.5 bg-indigo-500/10 text-indigo-400 rounded-xl flex-shrink-0 border border-indigo-500/20">
                     <FileText className="w-5 h-5" />
                   </div>
                   <div className="truncate">
-                    <p className="font-bold text-slate-900 dark:text-white truncate">
+                    <p className="font-bold text-white truncate">
                       {item.file.name}
                     </p>
-                    <p className="text-slate-400">
+                    <p className="text-slate-400 text-xs">
                       {(item.file.size / (1024 * 1024)).toFixed(2)} MB • {item.pageCount} trang
                     </p>
                   </div>
@@ -260,7 +255,7 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
                   <button
                     onClick={() => handleMoveUp(idx)}
                     disabled={idx === 0}
-                    className="p-1.5 text-slate-500 hover:text-indigo-600 disabled:opacity-30 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    className="p-1.5 text-slate-400 hover:text-indigo-400 disabled:opacity-30 rounded-lg hover:bg-slate-800 transition-colors"
                     title="Chuyển lên"
                   >
                     <ArrowUp className="w-4 h-4" />
@@ -268,14 +263,14 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
                   <button
                     onClick={() => handleMoveDown(idx)}
                     disabled={idx === items.length - 1}
-                    className="p-1.5 text-slate-500 hover:text-indigo-600 disabled:opacity-30 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    className="p-1.5 text-slate-400 hover:text-indigo-400 disabled:opacity-30 rounded-lg hover:bg-slate-800 transition-colors"
                     title="Chuyển xuống"
                   >
                     <ArrowDown className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => handleRemove(idx)}
-                    className="p-1.5 text-slate-400 hover:text-rose-500 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                    className="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-slate-800 transition-colors"
                     title="Xóa tệp này"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -286,7 +281,7 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
           </div>
 
           {/* Action Footer */}
-          <div className="pt-6 border-t border-slate-200/50 dark:border-slate-700/50 flex items-center justify-between relative z-10">
+          <div className="pt-6 border-t border-slate-800 flex items-center justify-between relative z-10">
             {resultBlob ? (
               <button
                 onClick={() => downloadBlob(resultBlob, 'PDFPro_GopDocument.pdf')}
@@ -302,7 +297,7 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
             <button
               onClick={handleStartMerge}
               disabled={progress.isProcessing || items.length < 2}
-              className="px-8 py-3.5 bg-gradient-to-r from-violet-500 to-purple-500 hover:from-violet-600 hover:to-purple-600 text-white font-black text-sm rounded-xl shadow-lg shadow-purple-500/30 active:scale-95 disabled:opacity-50 transition-all flex items-center space-x-2"
+              className="px-8 py-3.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-black text-sm rounded-xl shadow-lg shadow-purple-500/25 active:scale-95 disabled:opacity-50 transition-all flex items-center space-x-2"
             >
               <Layers className="w-5 h-5" />
               <span>Bắt Đầu Gộp</span>
@@ -321,3 +316,4 @@ export const ToolMergePdf: React.FC<ToolMergePdfProps> = ({ onBack }) => {
     </div>
   );
 };
+
