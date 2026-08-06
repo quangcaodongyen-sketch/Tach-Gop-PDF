@@ -1,7 +1,17 @@
 export type ToolId = 
   | 'split' 
   | 'merge' 
-  | 'remove-blank';
+  | 'remove-blank'
+  | 'rotate';
+
+export interface RotatePageInfo {
+  pageNumber: number;
+  pageIndex: number;
+  canvasThumbnail: string;
+  originalRotation: number;
+  rotation: number; // 0, 90, 180, 270
+}
+
 
 export interface ToolMeta {
   id: ToolId;

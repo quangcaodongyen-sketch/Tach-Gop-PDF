@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   Cpu,
   Lock,
+  RotateCw,
 } from 'lucide-react';
 import { ToolId, ToolMeta } from '../types';
 
@@ -35,6 +36,14 @@ export const TOOLS_LIST: ToolMeta[] = [
     icon: 'Eraser',
     color: 'from-emerald-400 via-teal-500 to-cyan-500',
     badge: 'Tự Động Smart',
+  },
+  {
+    id: 'rotate',
+    title: 'Xoay Trang PDF',
+    description: 'Xoay trực quan từng trang tài liệu bằng cách click chuột hoặc dùng AI tự động sửa chiều đọc chữ cực kỳ chính xác.',
+    icon: 'RotateCw',
+    color: 'from-amber-500 via-orange-500 to-rose-500',
+    badge: 'Mới & AI',
   }
 ];
 
@@ -51,6 +60,8 @@ export const HomeGrid: React.FC<HomeGridProps> = ({ onSelectTool }) => {
         return <Layers className="w-8 h-8 text-white drop-shadow-lg" />;
       case 'Eraser':
         return <Eraser className="w-8 h-8 text-white drop-shadow-lg" />;
+      case 'RotateCw':
+        return <RotateCw className="w-8 h-8 text-white drop-shadow-lg" />;
       default:
         return <Layers className="w-8 h-8 text-white drop-shadow-lg" />;
     }

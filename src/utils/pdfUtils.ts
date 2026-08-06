@@ -1,7 +1,7 @@
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, degrees } from 'pdf-lib';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
-import { BlankPageInfo } from '../types';
+import { BlankPageInfo, RotatePageInfo } from '../types';
 
 // Set up worker for pdfjs-dist using Vite bundled worker URL
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
@@ -213,3 +213,91 @@ export async function removePagesFromPdf(file: File, pageNumbersToRemove: number
 
   return await newDoc.save();
 }
+
+/**
+ * Load PDF page original rotation and generate canvas thumbnails
+ */
+export async function loadPdfPagesForRotation(
+  file: File,
+  onProgress?: (processed: number, total: number) => void,
+  cancelledRef?: { current: boolean }
+): Promise<RotatePageInfo[]> {
+  const arrayBuffer = await file.arrayBuffer();
+  // Get original rotations from pdf-lib
+  const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+  const totalPages = pdfDoc.getPageCount();
+  const originalRotations: number[] = [];
+  for (let i = 0; i < totalPages; i++) {
+    const page = pdfDoc.getPage(i);
+    originalRotations.push(page.getRotation().angle);
+  }
+
+  // Generate previews using pdfjs-dist
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const results: RotatePageInfo[] = [];
+
+  for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+    if (cancelledRef?.current) break;
+    if (onProgress) onProgress(pageNum - 1, totalPages);
+    try {
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 0.4 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+
+      let canvasThumbnail = '';
+      if (ctx) {
+        await page.render({ canvasContext: ctx, viewport }).promise;
+        canvasThumbnail = canvas.toDataURL('image/jpeg', 0.7);
+      }
+      
+      canvas.width = 0;
+      canvas.height = 0;
+
+      results.push({
+        pageNumber: pageNum,
+        pageIndex: pageNum - 1,
+        canvasThumbnail,
+        originalRotation: originalRotations[pageNum - 1] || 0,
+        rotation: 0, // initially 0 added rotation
+      });
+    } catch (err) {
+      console.warn(`Error loading page ${pageNum} preview:`, err);
+      results.push({
+        pageNumber: pageNum,
+        pageIndex: pageNum - 1,
+        canvasThumbnail: '',
+        originalRotation: originalRotations[pageNum - 1] || 0,
+        rotation: 0,
+      });
+    }
+  }
+
+  if (onProgress) onProgress(totalPages, totalPages);
+  return results;
+}
+
+/**
+ * Apply rotations to pages and return modified PDF bytes
+ */
+export async function rotatePdfPages(
+  file: File,
+  rotations: { pageNumber: number; rotation: number }[]
+): Promise<Uint8Array> {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdfDoc = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+
+  for (const item of rotations) {
+    const pageIndex = item.pageNumber - 1;
+    const page = pdfDoc.getPage(pageIndex);
+    // Visual orientation is: originalRotation + userRotation
+    // Set absolute rotation to this sum modulo 360
+    const finalAngle = (item.rotation) % 360;
+    page.setRotation(degrees(finalAngle));
+  }
+
+  return await pdfDoc.save();
+}
+

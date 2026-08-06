@@ -7,6 +7,7 @@ import { ApiKeyModal, STORAGE_KEY } from './components/ApiKeyModal';
 import { ToolSplitPdf } from './components/tools/ToolSplitPdf';
 import { ToolMergePdf } from './components/tools/ToolMergePdf';
 import { ToolRemoveBlankPages } from './components/tools/ToolRemoveBlankPages';
+import { ToolRotatePdf } from './components/tools/ToolRotatePdf';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
 export default function App() {
@@ -31,6 +32,8 @@ export default function App() {
         return <ToolMergePdf onBack={() => setActiveTool(null)} />;
       case 'remove-blank':
         return <ToolRemoveBlankPages onBack={() => setActiveTool(null)} />;
+      case 'rotate':
+        return <ToolRotatePdf onBack={() => setActiveTool(null)} />;
       default:
         return <HomeGrid onSelectTool={(id) => setActiveTool(id)} />;
     }
