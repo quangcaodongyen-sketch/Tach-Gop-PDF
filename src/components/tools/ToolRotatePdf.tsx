@@ -115,14 +115,15 @@ export const ToolRotatePdf: React.FC<ToolRotatePdfProps> = ({ onBack }) => {
     try {
       const base64Data = page.canvasThumbnail.split(',')[1];
       const resultText = await analyzeWithGemini({
-        prompt: `Bạn là một chuyên gia xử lý ảnh tài liệu. Hãy phân tích hướng chữ của trang tài liệu này và xác định góc cần xoay THEO CHIỀU KIM ĐỒ HỒ (0, 90, 180, hoặc 270 độ) để chữ nằm xuôi, giúp người dùng đọc bình thường từ trái sang phải, từ trên xuống dưới.
-Ví dụ:
-- Nếu chữ đã nằm xuôi, thẳng đứng, đọc bình thường: Trả về 0
-- Nếu tài liệu bị xoay ngang ngược chiều kim đồng hồ (đầu chữ nằm bên trái): Trả về 90
-- Nếu tài liệu bị ngược đầu ngược đuôi (chữ lộn ngược): Trả về 180
-- Nếu tài liệu bị xoay ngang thuận chiều kim đồng hồ (đầu chữ nằm bên phải): Trả về 270
+        prompt: `Hãy nhìn vào chữ trên trang tài liệu này và xác định hướng đọc của chữ hiện tại. 
+Để chữ trên trang tài liệu này có thể đọc được bình thường từ trái sang phải, từ trên xuống dưới (đầu chữ hướng lên trên), chúng ta cần xoay trang này bao nhiêu độ THEO CHIỀU KIM ĐỒ HỒ?
+Hãy chọn một trong các giá trị sau:
+- 0: Nếu chữ đã thẳng đứng, đầu chữ hướng lên trên, đọc được ngay.
+- 90: Nếu đầu chữ đang hướng sang bên trái (trang bị xoay ngang sang trái, dòng chữ chạy thẳng đứng từ dưới lên trên), cần xoay 90 độ theo chiều kim đồng hồ để thẳng đứng.
+- 180: Nếu đầu chữ đang hướng xuống dưới (trang bị ngược đầu, lộn ngược 180 độ), cần xoay 180 độ để thẳng đứng.
+- 270: Nếu đầu chữ đang hướng sang bên phải (trang bị xoay ngang sang phải, dòng chữ chạy thẳng đứng từ trên xuống dưới), cần xoay 270 độ theo chiều kim đồng hồ để thẳng đứng.
 
-Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả về thêm bất kỳ từ nào khác.`,
+Chỉ trả về duy nhất một con số: 0, 90, 180, hoặc 270. Không giải thích gì thêm.`,
         imageBase64: base64Data,
         mimeType: 'image/jpeg'
       });
@@ -171,14 +172,15 @@ Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả 
           
           try {
             const resultText = await analyzeWithGemini({
-              prompt: `Bạn là một chuyên gia xử lý ảnh tài liệu. Hãy phân tích hướng chữ của trang tài liệu này và xác định góc cần xoay THEO CHIỀU KIM ĐỒ HỒ (0, 90, 180, hoặc 270 độ) để chữ nằm xuôi, giúp người dùng đọc bình thường từ trái sang phải, từ trên xuống dưới.
-Ví dụ:
-- Nếu chữ đã nằm xuôi, thẳng đứng, đọc bình thường: Trả về 0
-- Nếu tài liệu bị xoay ngang ngược chiều kim đồng hồ (đầu chữ nằm bên trái): Trả về 90
-- Nếu tài liệu bị ngược đầu ngược đuôi (chữ lộn ngược): Trả về 180
-- Nếu tài liệu bị xoay ngang thuận chiều kim đồng hồ (đầu chữ nằm bên phải): Trả về 270
+              prompt: `Hãy nhìn vào chữ trên trang tài liệu này và xác định hướng đọc của chữ hiện tại. 
+Để chữ trên trang tài liệu này có thể đọc được bình thường từ trái sang phải, từ trên xuống dưới (đầu chữ hướng lên trên), chúng ta cần xoay trang này bao nhiêu độ THEO CHIỀU KIM ĐỒ HỒ?
+Hãy chọn một trong các giá trị sau:
+- 0: Nếu chữ đã thẳng đứng, đầu chữ hướng lên trên, đọc được ngay.
+- 90: Nếu đầu chữ đang hướng sang bên trái (trang bị xoay ngang sang trái, dòng chữ chạy thẳng đứng từ dưới lên trên), cần xoay 90 độ theo chiều kim đồng hồ để thẳng đứng.
+- 180: Nếu đầu chữ đang hướng xuống dưới (trang bị ngược đầu, lộn ngược 180 độ), cần xoay 180 độ để thẳng đứng.
+- 270: Nếu đầu chữ đang hướng sang bên phải (trang bị xoay ngang sang phải, dòng chữ chạy thẳng đứng từ trên xuống dưới), cần xoay 270 độ theo chiều kim đồng hồ để thẳng đứng.
 
-Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả về thêm bất kỳ từ nào khác.`,
+Chỉ trả về duy nhất một con số: 0, 90, 180, hoặc 270. Không giải thích gì thêm.`,
               imageBase64: base64Data,
               mimeType: 'image/jpeg'
             });
