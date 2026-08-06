@@ -117,6 +117,9 @@ export const ToolRotatePdf: React.FC<ToolRotatePdfProps> = ({ onBack }) => {
       const resultText = await analyzeWithGemini({
         prompt: `Hãy nhìn vào chữ trên trang tài liệu này và xác định hướng đọc của chữ hiện tại. 
 Để chữ trên trang tài liệu này có thể đọc được bình thường từ trái sang phải, từ trên xuống dưới (đầu chữ hướng lên trên), chúng ta cần xoay trang này bao nhiêu độ THEO CHIỀU KIM ĐỒ HỒ?
+
+ĐẶC BIỆT LƯU Ý: Nếu chữ đã thẳng đứng, đọc được bình thường từ trái sang phải (không bị lật ngược, không bị xoay nghiêng), bạn BẮT BUỘC phải trả về 0.
+
 Hãy chọn một trong các giá trị sau:
 - 0: Nếu chữ đã thẳng đứng, đầu chữ hướng lên trên, đọc được ngay.
 - 90: Nếu đầu chữ đang hướng sang bên trái (trang bị xoay ngang sang trái, dòng chữ chạy thẳng đứng từ dưới lên trên), cần xoay 90 độ theo chiều kim đồng hồ để thẳng đứng.
@@ -174,6 +177,9 @@ Chỉ trả về duy nhất một con số: 0, 90, 180, hoặc 270. Không giả
             const resultText = await analyzeWithGemini({
               prompt: `Hãy nhìn vào chữ trên trang tài liệu này và xác định hướng đọc của chữ hiện tại. 
 Để chữ trên trang tài liệu này có thể đọc được bình thường từ trái sang phải, từ trên xuống dưới (đầu chữ hướng lên trên), chúng ta cần xoay trang này bao nhiêu độ THEO CHIỀU KIM ĐỒ HỒ?
+
+ĐẶC BIỆT LƯU Ý: Nếu chữ đã thẳng đứng, đọc được bình thường từ trái sang phải (không bị lật ngược, không bị xoay nghiêng), bạn BẮT BUỘC phải trả về 0.
+
 Hãy chọn một trong các giá trị sau:
 - 0: Nếu chữ đã thẳng đứng, đầu chữ hướng lên trên, đọc được ngay.
 - 90: Nếu đầu chữ đang hướng sang bên trái (trang bị xoay ngang sang trái, dòng chữ chạy thẳng đứng từ dưới lên trên), cần xoay 90 độ theo chiều kim đồng hồ để thẳng đứng.

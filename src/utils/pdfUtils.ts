@@ -241,7 +241,7 @@ export async function loadPdfPagesForRotation(
     if (onProgress) onProgress(pageNum - 1, totalPages);
     try {
       const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 0.4 });
+      const viewport = page.getViewport({ scale: 0.8 });
       const canvas = document.createElement('canvas');
       canvas.width = viewport.width;
       canvas.height = viewport.height;
@@ -250,7 +250,7 @@ export async function loadPdfPagesForRotation(
       let canvasThumbnail = '';
       if (ctx) {
         await page.render({ canvasContext: ctx, viewport }).promise;
-        canvasThumbnail = canvas.toDataURL('image/jpeg', 0.7);
+        canvasThumbnail = canvas.toDataURL('image/jpeg', 0.85);
       }
       
       canvas.width = 0;
