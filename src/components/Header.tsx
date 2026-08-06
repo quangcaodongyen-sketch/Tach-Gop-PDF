@@ -70,10 +70,10 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center space-x-3">
           <button
             onClick={onOpenApiKeyModal}
-            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border shadow-sm ${
+            className={`flex items-center space-x-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border shadow-sm cursor-pointer ${
               hasApiKey
                 ? 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30 hover:bg-emerald-500/20'
-                : 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30 hover:bg-indigo-500/20'
+                : 'bg-rose-500/10 text-rose-400 border-rose-500/30 hover:bg-rose-500/20 animate-pulse border-red-500/40'
             }`}
             title="Nhập hoặc đổi API Key cá nhân"
           >
@@ -85,9 +85,9 @@ export const Header: React.FC<HeaderProps> = ({
               </>
             ) : (
               <>
-                <Key className="w-4 h-4 text-indigo-400" />
-                <span>Cấu Hình API Key</span>
-                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
+                <Key className="w-4 h-4 text-rose-450" />
+                <span className="text-rose-450 font-extrabold">Lấy API key để sử dụng app</span>
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
               </>
             )}
           </button>

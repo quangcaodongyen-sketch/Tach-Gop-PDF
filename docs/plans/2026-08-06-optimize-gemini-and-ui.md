@@ -8,7 +8,10 @@
 ## User Review Required
 
 > [!IMPORTANT]
-> - **CAM KẾT BẢO MẬT TÀI LIỆU**: Ứng dụng chạy **100% Client-side** (trên trình duyệt của người dùng). Tài liệu PDF, ảnh xem trước và thông tin nhạy cảm của bạn hoàn toàn **KHÔNG** được lưu trữ, sao lưu hay gửi lên bất kỳ máy chủ trung gian nào. Các tính năng như tách, gộp, xoá trang trắng đều xử lý cục bộ; chỉ có ảnh xem trước trang được gửi trực tiếp tới API chính thức của Google Gemini để nhận diện hướng chữ khi bạn bấm nút "Tự động xoay bằng AI".
+> - **Xử lý click chuột trên trang PDF**:
+>   - **Click chuột trái**: Xoay trang thủ công 90 độ theo chiều kim đồng hồ.
+>   - **Click chuột phải (`onContextMenu`)**: Tự động chặn menu chuột phải của trình duyệt, chạy AI nhận diện và tự động xoay trang đó về đúng chiều chữ đọc được.
+> - **CAM KẾT BẢO MẬT TÀI LIỆU**: Ứng dụng chạy **100% Client-side** (trên trình duyệt của người dùng). Tài liệu PDF, ảnh xem trước và thông tin nhạy cảm của bạn hoàn toàn **KHÔNG** được lưu trữ, sao lưu hay gửi lên bất kỳ máy chủ trung gian nào. Các tính năng như tách, gộp, xoá trang trắng đều xử lý cục bộ; chỉ có ảnh xem trước trang được gửi trực tiếp tới API chính thức của Google Gemini để nhận diện hướng chữ khi bạn bấm nút "Tự động xoay bằng AI" hoặc click chuột phải vào trang cụ thể.
 > - **Cách tiếp cận**: Gọi Gemini API trực tiếp từ Client-side (trình duyệt) thông qua API Key cá nhân của người dùng thay vì thông qua backend Express. Điều này giúp chạy độc lập trên Vercel mà không phát sinh lỗi 404/timeout.
 > - **Bố cục giao diện**: 4 tính năng ở trang chủ được chuyển thành 1 hàng ngang duy nhất (`grid-cols-4`), thu nhỏ thẻ một chút và tô điểm bằng 4 dải màu gradient tương phản bắt mắt.
 > - **Cơ chế Fallback/Retry**: Nếu một model bị lỗi hoặc hết quota, client sẽ tự động thử lại với model tiếp theo trong chuỗi. Nếu toàn bộ chuỗi lỗi hoặc hết quota, hiển thị thông báo hướng dẫn đổi API key khác.
@@ -61,6 +64,7 @@
 ### 5. Rotate PDF Page AI Integration
 
 #### [MODIFY] [ToolRotatePdf.tsx](file:///c:/Users/Admin/Downloads/Tach-Gop-PDF-main/src/components/tools/ToolRotatePdf.tsx)
+- Hỗ trợ sự kiện click chuột trái để xoay 90 độ, click chuột phải (`onContextMenu`) để gọi AI nhận diện riêng trang đó.
 - Cập nhật hàm `handleAutoRotateWithAi` để gọi qua helper `geminiApi.ts` mới.
 - Xử lý thông báo lỗi quota rõ ràng hơn để người dùng biết cách thay đổi key.
 

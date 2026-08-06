@@ -14,6 +14,7 @@ import { loadPdfPagesForRotation, rotatePdfPages } from '../../utils/pdfUtils';
 import { downloadBlob } from '../../utils/zipUtils';
 import { RotatePageInfo } from '../../types';
 import { STORAGE_KEY } from '../ApiKeyModal';
+import { analyzeWithGemini } from '../../utils/geminiApi';
 
 interface ToolRotatePdfProps {
   onBack: () => void;
@@ -27,6 +28,7 @@ export const ToolRotatePdf: React.FC<ToolRotatePdfProps> = ({ onBack }) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [isAiProcessing, setIsAiProcessing] = useState(false);
   const [aiProgress, setAiProgress] = useState(0);
+  const [loadingPageNumbers, setLoadingPageNumbers] = useState<number[]>([]);
   
   const cancelledRef = useRef(false);
 
@@ -96,7 +98,52 @@ export const ToolRotatePdf: React.FC<ToolRotatePdfProps> = ({ onBack }) => {
     );
   };
 
-  // Auto detect text orientation using Gemini API
+  // Auto detect text orientation using Gemini API for a single page (on right click)
+  const handleAutoRotateSinglePage = async (pageNumber: number) => {
+    const apiKey = localStorage.getItem(STORAGE_KEY) || '';
+    if (!apiKey) {
+      alert('Vui lòng cấu hình Gemini API Key trước khi sử dụng tính năng xoay bằng AI. Bạn có thể bấm vào biểu tượng API Key ở góc phải trên cùng để nhập.');
+      return;
+    }
+
+    const page = pageInfos.find((p) => p.pageNumber === pageNumber);
+    if (!page || !page.canvasThumbnail) return;
+
+    // Add page number to loading state
+    setLoadingPageNumbers((prev) => [...prev, pageNumber]);
+
+    try {
+      const base64Data = page.canvasThumbnail.split(',')[1];
+      const resultText = await analyzeWithGemini({
+        prompt: `Bạn là một chuyên gia xử lý ảnh tài liệu. Hãy phân tích hướng chữ của trang tài liệu này và xác định góc cần xoay THEO CHIỀU KIM ĐỒ HỒ (0, 90, 180, hoặc 270 độ) để chữ nằm xuôi, giúp người dùng đọc bình thường từ trái sang phải, từ trên xuống dưới.
+Ví dụ:
+- Nếu chữ đã nằm xuôi, thẳng đứng, đọc bình thường: Trả về 0
+- Nếu tài liệu bị xoay ngang ngược chiều kim đồng hồ (đầu chữ nằm bên trái): Trả về 90
+- Nếu tài liệu bị ngược đầu ngược đuôi (chữ lộn ngược): Trả về 180
+- Nếu tài liệu bị xoay ngang thuận chiều kim đồng hồ (đầu chữ nằm bên phải): Trả về 270
+
+Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả về thêm bất kỳ từ nào khác.`,
+        imageBase64: base64Data,
+        mimeType: 'image/jpeg'
+      });
+
+      const match = resultText.trim().match(/(0|90|180|270)/);
+      if (match) {
+        const suggestedRotation = parseInt(match[1], 10);
+        setPageInfos((prev) =>
+          prev.map((p) =>
+            p.pageNumber === pageNumber ? { ...p, rotation: suggestedRotation % 360 } : p
+          )
+        );
+      }
+    } catch (err: any) {
+      alert(`Lỗi nhận diện trang ${pageNumber}: ` + err.message);
+    } finally {
+      setLoadingPageNumbers((prev) => prev.filter((id) => id !== pageNumber));
+    }
+  };
+
+  // Auto detect text orientation using Gemini API (batch process all pages)
   const handleAutoRotateWithAi = async () => {
     const apiKey = localStorage.getItem(STORAGE_KEY) || '';
     if (!apiKey) {
@@ -110,7 +157,6 @@ export const ToolRotatePdf: React.FC<ToolRotatePdfProps> = ({ onBack }) => {
     const total = pageInfos.length;
     let completedCount = 0;
     
-    // Make a copy of pages to update
     const updatedPages = [...pageInfos];
 
     try {
@@ -121,18 +167,11 @@ export const ToolRotatePdf: React.FC<ToolRotatePdfProps> = ({ onBack }) => {
         await Promise.all(chunk.map(async (page) => {
           if (!page.canvasThumbnail) return;
 
-          // Convert DataURL to raw Base64 string
           const base64Data = page.canvasThumbnail.split(',')[1];
           
           try {
-            const res = await fetch('/api/gemini/analyze', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'x-gemini-key': apiKey,
-              },
-              body: JSON.stringify({
-                prompt: `Bạn là một chuyên gia xử lý ảnh tài liệu. Hãy phân tích hướng chữ của trang tài liệu này và xác định góc cần xoay THEO CHIỀU KIM ĐỒ HỒ (0, 90, 180, hoặc 270 độ) để chữ nằm xuôi, giúp người dùng đọc bình thường từ trái sang phải, từ trên xuống dưới.
+            const resultText = await analyzeWithGemini({
+              prompt: `Bạn là một chuyên gia xử lý ảnh tài liệu. Hãy phân tích hướng chữ của trang tài liệu này và xác định góc cần xoay THEO CHIỀU KIM ĐỒ HỒ (0, 90, 180, hoặc 270 độ) để chữ nằm xuôi, giúp người dùng đọc bình thường từ trái sang phải, từ trên xuống dưới.
 Ví dụ:
 - Nếu chữ đã nằm xuôi, thẳng đứng, đọc bình thường: Trả về 0
 - Nếu tài liệu bị xoay ngang ngược chiều kim đồng hồ (đầu chữ nằm bên trái): Trả về 90
@@ -140,18 +179,11 @@ Ví dụ:
 - Nếu tài liệu bị xoay ngang thuận chiều kim đồng hồ (đầu chữ nằm bên phải): Trả về 270
 
 Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả về thêm bất kỳ từ nào khác.`,
-                imageBase64: base64Data,
-                mimeType: 'image/jpeg'
-              })
+              imageBase64: base64Data,
+              mimeType: 'image/jpeg'
             });
 
-            if (!res.ok) {
-              throw new Error('Lỗi phản hồi từ API');
-            }
-
-            const data = await res.json();
-            const angleText = data.text ? data.text.trim() : '';
-            const match = angleText.match(/(0|90|180|270)/);
+            const match = resultText.trim().match(/(0|90|180|270)/);
             if (match) {
               const suggestedRotation = parseInt(match[1], 10);
               const idx = updatedPages.findIndex(p => p.pageNumber === page.pageNumber);
@@ -225,7 +257,7 @@ Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả 
           <div>
             <h2 className="text-3xl font-black tracking-tight drop-shadow-md">Xoay Trang PDF</h2>
             <p className="text-sm text-amber-100 font-medium mt-1">
-              Xoay thủ công từng trang bằng cách bấm chuột hoặc sửa chiều chữ hàng loạt tự động bằng AI thông minh.
+              Click chuột trái để xoay 90°, click chuột phải để chạy AI tự động sửa chiều đọc chữ cho từng trang.
             </p>
           </div>
         </div>
@@ -249,7 +281,7 @@ Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả 
               Chọn tệp PDF cần xoay trang
             </h3>
             <p className="text-xs text-slate-400 mt-1">
-              Hệ thống hỗ trợ xoay trực quan bằng cách bấm vào từng trang
+              Hỗ trợ kéo thả file PDF trực tiếp vào trình duyệt
             </p>
           </div>
           <label className="inline-block">
@@ -311,7 +343,7 @@ Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả 
                 Tổng số: {pageInfos.length} trang
               </h3>
               <p className="text-xs text-slate-400">
-                Click vào từng trang để xoay 90° hoặc chọn xoay hàng loạt bên phải.
+                Nhấp <span className="text-amber-400 font-bold">chuột trái</span> để xoay 90°, nhấp <span className="text-indigo-400 font-bold">chuột phải</span> để tự động nhận diện hướng chữ bằng AI.
               </p>
             </div>
 
@@ -362,12 +394,17 @@ Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {pageInfos.map((p) => {
               const visualRot = (p.originalRotation + p.rotation) % 360;
+              const isPageProcessing = loadingPageNumbers.includes(p.pageNumber);
 
               return (
                 <div
                   key={p.pageNumber}
                   onClick={() => handleRotatePage(p.pageNumber)}
-                  className="group relative bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 hover:border-amber-500/50 p-3 cursor-pointer transition-all duration-300 shadow-md hover:scale-[1.02] flex flex-col justify-between"
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    handleAutoRotateSinglePage(p.pageNumber);
+                  }}
+                  className="group relative bg-slate-900/80 backdrop-blur-sm rounded-2xl border border-slate-800 hover:border-amber-500/50 p-3 cursor-pointer transition-all duration-300 shadow-md hover:scale-[1.02] flex flex-col justify-between select-none"
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[11px] font-bold text-slate-300">
@@ -396,11 +433,25 @@ Chỉ trả về DUY NHẤT một số là 0, 90, 180, hoặc 270, không trả 
                       )}
                     </div>
 
-                    <div className="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/40 backdrop-blur-[0.5px] transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
-                      <div className="p-2 bg-amber-500 rounded-full text-white shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
-                        <RotateCw className="w-5 h-5" />
+                    {/* AI Processing overlay for single page */}
+                    {isPageProcessing && (
+                      <div className="absolute inset-0 bg-indigo-950/70 backdrop-blur-[1px] flex flex-col items-center justify-center text-white space-y-1.5">
+                        <RefreshCw className="w-6 h-6 text-indigo-400 animate-spin" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300">Đang quét AI...</span>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Hover rotation overlay */}
+                    {!isPageProcessing && (
+                      <div className="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/40 backdrop-blur-[0.5px] transition-colors flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 space-y-2">
+                        <div className="p-2 bg-amber-500 rounded-full text-white shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
+                          <RotateCw className="w-5 h-5" />
+                        </div>
+                        <span className="text-[9px] bg-slate-950/80 text-slate-200 px-2 py-0.5 rounded-md font-medium border border-slate-800">
+                          Click phải: Xoay bằng AI
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="mt-2.5 text-center flex items-center justify-center space-x-1">

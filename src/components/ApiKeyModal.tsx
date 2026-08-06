@@ -8,9 +8,11 @@ interface ApiKeyModalProps {
 }
 
 export const STORAGE_KEY = 'pdfpro_gemini_api_key';
+export const SELECTED_MODEL_KEY = 'pdfpro_selected_model';
 
 export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKeySaved }) => {
   const [apiKey, setApiKey] = useState('');
+  const [selectedModel, setSelectedModel] = useState('gemini-3-flash-preview');
   const [showKey, setShowKey] = useState(false);
   const [showGuide, setShowGuide] = useState(true);
   const [savedSuccess, setSavedSuccess] = useState(false);
@@ -18,12 +20,15 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) || '';
     setApiKey(stored);
+    const storedModel = localStorage.getItem(SELECTED_MODEL_KEY) || 'gemini-3-flash-preview';
+    setSelectedModel(storedModel);
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   const handleSave = () => {
     const cleanKey = apiKey.trim();
+    localStorage.setItem(SELECTED_MODEL_KEY, selectedModel);
     if (cleanKey) {
       localStorage.setItem(STORAGE_KEY, cleanKey);
       if (onKeySaved) onKeySaved(cleanKey);
@@ -55,13 +60,13 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
               <Key className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h3 className="font-black text-lg leading-tight">Cấu Hình Gemini API Key</h3>
-              <p className="text-xs text-indigo-100 font-medium">Tự quản lý API Key cá nhân nhanh chóng & bảo mật</p>
+              <h3 className="font-black text-lg leading-tight">Cấu Hình Gemini AI</h3>
+              <p className="text-xs text-indigo-100 font-medium">Chọn model và dán API Key cá nhân cực kỳ bảo mật</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
             title="Đóng"
           >
             <X className="w-5 h-5" />
@@ -73,13 +78,40 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
           {savedSuccess && (
             <div className="p-3 bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 rounded-2xl text-xs font-bold flex items-center space-x-2 animate-fadeIn">
               <Check className="w-5 h-5 flex-shrink-0 text-emerald-400" />
-              <span>Đã lưu API Key thành công trên trình duyệt (Local Storage)!</span>
+              <span>Đã cấu hình Gemini AI thành công!</span>
             </div>
           )}
 
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-              Nhập Gemini API Key của bạn:
+          {/* AI Model Cards Grid */}
+          <div className="space-y-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300">
+              Chọn Model AI sử dụng:
+            </label>
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { id: 'gemini-3-flash-preview', label: 'Gemini 3 Flash', desc: 'Mặc định (Nhanh & Tốt)' },
+                { id: 'gemini-3-pro-preview', label: 'Gemini 3 Pro', desc: 'Chất lượng cao nhất' },
+                { id: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash', desc: 'Rất ổn định' }
+              ].map((m) => (
+                <div
+                  key={m.id}
+                  onClick={() => setSelectedModel(m.id)}
+                  className={`cursor-pointer rounded-2xl p-3 border-2 transition-all text-center flex flex-col justify-between min-h-[75px] ${
+                    selectedModel === m.id
+                      ? 'border-indigo-500 bg-indigo-500/10 text-white'
+                      : 'border-slate-800 bg-slate-950/60 hover:border-slate-700 text-slate-400'
+                  }`}
+                >
+                  <div className="font-extrabold text-[11px] uppercase tracking-wide">{m.label}</div>
+                  <div className="text-[9px] mt-1 text-slate-500 font-medium leading-tight">{m.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-300">
+              Dán Gemini API Key của bạn:
             </label>
             <div className="relative">
               <input
@@ -92,14 +124,14 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onClose, onKey
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1 cursor-pointer"
               >
                 {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
-            <p className="mt-2 text-[11px] text-slate-400 flex items-center space-x-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 inline-block flex-shrink-0" />
-              <span>API Key chỉ lưu an toàn trong trình duyệt (Local Storage). Không gửi tới máy chủ khác.</span>
+            <p className="text-[11px] text-slate-400 flex items-center space-x-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-450 inline-block flex-shrink-0" />
+              <span>API Key chỉ lưu an toàn trong trình duyệt của bạn (Local Storage).</span>
             </p>
           </div>
 
