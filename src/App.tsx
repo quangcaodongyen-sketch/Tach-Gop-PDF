@@ -18,9 +18,6 @@ export default function App() {
   useEffect(() => {
     const savedKey = localStorage.getItem(STORAGE_KEY) || '';
     setApiKey(savedKey);
-    if (!savedKey) {
-      setIsApiKeyModalOpen(true);
-    }
   }, []);
 
   const handleKeySaved = (newKey: string) => {
